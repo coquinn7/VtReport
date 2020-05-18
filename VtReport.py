@@ -1,3 +1,6 @@
+# Quinn Cooke
+# CFRS-772
+
 import virustotal
 from pathlib import Path
 import volatility.debug as debug
