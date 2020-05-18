@@ -12,3 +12,6 @@ VtReport.py is a volatility plugin that allows a user to dump an executable file
 Place vtreport.py in the plugins folder  
 
 ``python2 vol.py -f <memory sample> --profile=<profile> vtreport -D </path/to/dump> -p <pid> -a <api key>``
+
+## Example Output
+![](images/example.png)
