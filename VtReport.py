@@ -1,6 +1,3 @@
-# Quinn Cooke
-# CFRS-772
-
 import virustotal
 from pathlib import Path
 import volatility.debug as debug
@@ -36,15 +33,14 @@ class VtReport(common.AbstractWindowsCommand):
 
         out_file = Path(self._config.DUMP).joinpath(dump_file)
         # Create DOS header at base address
-        # Offset = process PEB Image Base Address (get this in calculate method)
-        # Vm = process space (get this in calculate method)
+        # Offset = process PEB Image Base Address
+        # Vm = process space
         pe_file = obj.Object("_IMAGE_DOS_HEADER", offset=base, vm=space)
 
         try:
             with out_file.open('wb') as fh:
                 for offset, code in pe_file.get_image():
                     fh.seek(offset)
-                    #  write contents to dump file
                     fh.write(code)
         except Exception as e:
             debug.error(e)
@@ -93,10 +89,12 @@ class VtReport(common.AbstractWindowsCommand):
             return report
 
     def calculate(self):
+        """
+        do the work, return the vt report object
+        :return: VT report object
+        """
         addr_space = utils.load_as(self._config)
-        # call get_pid() to isolate user supplied PID
         task = self.get_pid(win32.tasks.pslist(addr_space))
-        # get the address space for the process
         task_space = task.get_process_address_space()
 
         if task_space is None:
@@ -117,6 +115,12 @@ class VtReport(common.AbstractWindowsCommand):
             return report
 
     def render_text(self, outfd, data):
+        """
+        write VT report details to console
+        :param outfd: text to write
+        :param data: VT report object
+        :return: nothing
+        """
         outfd.write('\n{:*^100}\n'.format(' VirusTotal Report '))
         outfd.write('\nPermalink: {}\n'.format(data.permalink))
         outfd.write('''
