@@ -71,9 +71,9 @@ class VtReport(common.AbstractWindowsCommand):
 
     def get_report(self, in_file):
         """
-        Submit dumped PE to VT and return report
+        Submit dumped PE to VT and return report object
         :param in_file: Path to dumped PE
-        :return: VirusTotal Report
+        :return: VT report object
         """
         if self._config.APIKEY is None:
             debug.error('Please provide a VirusTotal API Key')
@@ -89,10 +89,6 @@ class VtReport(common.AbstractWindowsCommand):
             return report
 
     def calculate(self):
-        """
-        do the work, return the vt report object
-        :return: VT report object
-        """
         addr_space = utils.load_as(self._config)
         task = self.get_pid(win32.tasks.pslist(addr_space))
         task_space = task.get_process_address_space()
@@ -115,12 +111,6 @@ class VtReport(common.AbstractWindowsCommand):
             return report
 
     def render_text(self, outfd, data):
-        """
-        write VT report details to console
-        :param outfd: text to write
-        :param data: VT report object
-        :return: nothing
-        """
         outfd.write('\n{:*^100}\n'.format(' VirusTotal Report '))
         outfd.write('\nPermalink: {}\n'.format(data.permalink))
         outfd.write('''
@@ -139,5 +129,3 @@ Antivirus version: {}
 Antivirus update: {}
 Malware: {}
                 '''.format(antivirus[0], antivirus[1], antivirus[2], malware))
-
-
