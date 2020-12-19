@@ -56,7 +56,6 @@ class VtReport(common.AbstractWindowsCommand):
         if self._config.PID is None:
             debug.error('Please provide a PID')
         try:
-            # cast user supplied PID as int to validate input
             pid = int(self._config.PID)
         except ValueError:
             debug.error('Invalid PID: {}'.format(self._config.PID))
